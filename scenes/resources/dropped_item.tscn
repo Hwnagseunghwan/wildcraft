@@ -1,0 +1,33 @@
+[gd_scene load_steps=5 format=3 uid="uid://wildcraft_drop"]
+
+[ext_resource type="Script" path="res://scenes/resources/dropped_item.gd" id="1_dropgd"]
+
+[sub_resource type="SphereShape3D" id="1_pickshape"]
+radius = 0.55
+
+[sub_resource type="BoxMesh" id="1_dropmesh"]
+size = Vector3(0.18, 0.18, 0.18)
+
+[sub_resource type="StandardMaterial3D" id="1_dropmat"]
+albedo_color = Color(1, 1, 1, 1)
+metallic = 0.2
+roughness = 0.5
+
+[node name="DroppedItem" type="Area3D"]
+script = ExtResource("1_dropgd")
+monitoring = true
+monitorable = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("1_pickshape")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("1_dropmesh")
+surface_material_override/0 = SubResource("1_dropmat")
+
+[node name="Label3D" type="Label3D" parent="."]
+pixel_size = 0.01
+billboard = 2
+font_size = 48
+outline_size = 12
+text = ""

@@ -1,0 +1,38 @@
+[gd_scene load_steps=6 format=3 uid="uid://wildcraft_horse"]
+
+[ext_resource type="Script" path="res://scenes/animals/horse.gd" id="1_horsegd"]
+
+[sub_resource type="CapsuleShape3D" id="1_horseshape"]
+radius = 0.50
+height = 1.5
+
+[sub_resource type="BoxMesh" id="1_bodymesh"]
+size = Vector3(0.85, 0.90, 1.60)
+
+[sub_resource type="StandardMaterial3D" id="1_bodymat"]
+albedo_color = Color(0.42, 0.28, 0.14, 1)
+roughness = 0.85
+
+[sub_resource type="BoxMesh" id="1_headmesh"]
+size = Vector3(0.30, 0.45, 0.55)
+
+[sub_resource type="StandardMaterial3D" id="1_headmat"]
+albedo_color = Color(0.38, 0.25, 0.12, 1)
+roughness = 0.8
+
+[node name="Horse" type="CharacterBody3D"]
+script = ExtResource("1_horsegd")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+position = Vector3(0, 0.85, 0)
+shape = SubResource("1_horseshape")
+
+[node name="Body" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.85, 0)
+mesh = SubResource("1_bodymesh")
+surface_material_override/0 = SubResource("1_bodymat")
+
+[node name="Head" type="MeshInstance3D" parent="."]
+position = Vector3(0, 1.45, 0.72)
+mesh = SubResource("1_headmesh")
+surface_material_override/0 = SubResource("1_headmat")

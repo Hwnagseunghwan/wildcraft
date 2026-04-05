@@ -1,0 +1,38 @@
+[gd_scene load_steps=6 format=3 uid="uid://wildcraft_sheep"]
+
+[ext_resource type="Script" path="res://scenes/animals/sheep.gd" id="1_sheepgd"]
+
+[sub_resource type="CapsuleShape3D" id="1_sheepshape"]
+radius = 0.35
+height = 0.9
+
+[sub_resource type="BoxMesh" id="1_bodymesh"]
+size = Vector3(0.7, 0.55, 0.9)
+
+[sub_resource type="StandardMaterial3D" id="1_bodymat"]
+albedo_color = Color(0.92, 0.92, 0.90, 1)
+roughness = 0.9
+
+[sub_resource type="BoxMesh" id="1_headmesh"]
+size = Vector3(0.3, 0.3, 0.3)
+
+[sub_resource type="StandardMaterial3D" id="1_headmat"]
+albedo_color = Color(0.70, 0.65, 0.58, 1)
+roughness = 0.8
+
+[node name="Sheep" type="CharacterBody3D"]
+script = ExtResource("1_sheepgd")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+position = Vector3(0, 0.5, 0)
+shape = SubResource("1_sheepshape")
+
+[node name="Body" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.52, 0)
+mesh = SubResource("1_bodymesh")
+surface_material_override/0 = SubResource("1_bodymat")
+
+[node name="Head" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.75, 0.45)
+mesh = SubResource("1_headmesh")
+surface_material_override/0 = SubResource("1_headmat")

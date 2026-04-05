@@ -1,0 +1,38 @@
+[gd_scene load_steps=6 format=3 uid="uid://wildcraft_cow"]
+
+[ext_resource type="Script" path="res://scenes/animals/cow.gd" id="1_cowgd"]
+
+[sub_resource type="CapsuleShape3D" id="1_cowshape"]
+radius = 0.45
+height = 1.2
+
+[sub_resource type="BoxMesh" id="1_bodymesh"]
+size = Vector3(0.9, 0.75, 1.3)
+
+[sub_resource type="StandardMaterial3D" id="1_bodymat"]
+albedo_color = Color(0.22, 0.18, 0.14, 1)
+roughness = 0.9
+
+[sub_resource type="BoxMesh" id="1_headmesh"]
+size = Vector3(0.38, 0.38, 0.40)
+
+[sub_resource type="StandardMaterial3D" id="1_headmat"]
+albedo_color = Color(0.28, 0.22, 0.16, 1)
+roughness = 0.8
+
+[node name="Cow" type="CharacterBody3D"]
+script = ExtResource("1_cowgd")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+position = Vector3(0, 0.65, 0)
+shape = SubResource("1_cowshape")
+
+[node name="Body" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.72, 0)
+mesh = SubResource("1_bodymesh")
+surface_material_override/0 = SubResource("1_bodymat")
+
+[node name="Head" type="MeshInstance3D" parent="."]
+position = Vector3(0, 1.0, 0.62)
+mesh = SubResource("1_headmesh")
+surface_material_override/0 = SubResource("1_headmat")

@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://wildcraft_hud"]
+
+[ext_resource type="Script" path="res://scenes/ui/hud.gd" id="1_hudgd"]
+
+[node name="HUD" type="CanvasLayer"]
+script = ExtResource("1_hudgd")
+layer = 10

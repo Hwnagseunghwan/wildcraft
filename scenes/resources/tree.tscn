@@ -1,0 +1,44 @@
+[gd_scene load_steps=7 format=3 uid="uid://wildcraft_tree"]
+
+[ext_resource type="Script" path="res://scenes/resources/resource_node.gd" id="1_rngd"]
+
+[sub_resource type="CylinderShape3D" id="1_trunkshape"]
+radius = 0.28
+height = 3.2
+
+[sub_resource type="CylinderMesh" id="1_trunkmesh"]
+top_radius = 0.18
+bottom_radius = 0.28
+height = 3.2
+
+[sub_resource type="StandardMaterial3D" id="1_trunkmat"]
+albedo_color = Color(0.42, 0.26, 0.10, 1)
+roughness = 1.0
+
+[sub_resource type="SphereMesh" id="1_leavesmesh"]
+radius = 1.4
+height = 2.2
+
+[sub_resource type="StandardMaterial3D" id="1_leavesmat"]
+albedo_color = Color(0.18, 0.58, 0.12, 1)
+roughness = 0.9
+
+[node name="Tree" type="StaticBody3D"]
+script = ExtResource("1_rngd")
+resource_type = 1
+max_health = 5
+display_name = "나무"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+position = Vector3(0, 1.6, 0)
+shape = SubResource("1_trunkshape")
+
+[node name="Trunk" type="MeshInstance3D" parent="."]
+position = Vector3(0, 1.6, 0)
+mesh = SubResource("1_trunkmesh")
+surface_material_override/0 = SubResource("1_trunkmat")
+
+[node name="Leaves" type="MeshInstance3D" parent="."]
+position = Vector3(0, 3.8, 0)
+mesh = SubResource("1_leavesmesh")
+surface_material_override/0 = SubResource("1_leavesmat")

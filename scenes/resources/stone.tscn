@@ -1,0 +1,29 @@
+[gd_scene load_steps=4 format=3 uid="uid://wildcraft_stone"]
+
+[ext_resource type="Script" path="res://scenes/resources/resource_node.gd" id="1_rngd"]
+
+[sub_resource type="SphereShape3D" id="1_stoneshape"]
+radius = 0.5
+
+[sub_resource type="SphereMesh" id="1_stonemesh"]
+radius = 0.5
+height = 0.7
+
+[sub_resource type="StandardMaterial3D" id="1_stonemat"]
+albedo_color = Color(0.52, 0.52, 0.52, 1)
+roughness = 1.0
+
+[node name="Stone" type="StaticBody3D"]
+script = ExtResource("1_rngd")
+resource_type = 2
+max_health = 4
+display_name = "돌"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+position = Vector3(0, 0.35, 0)
+shape = SubResource("1_stoneshape")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.35, 0)
+mesh = SubResource("1_stonemesh")
+surface_material_override/0 = SubResource("1_stonemat")
