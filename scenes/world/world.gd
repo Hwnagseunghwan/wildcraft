@@ -4,11 +4,14 @@ extends Node3D
 
 const CHUNK_SIZE      : int   = 16
 const RENDER_DISTANCE : int   = 4     # 청크 단위
-const HEIGHT_AMP      : float = 5.0   # 지형 높낮이 폭
 
 var chunks       : Dictionary = {}
 var player_chunk : Vector2i   = Vector2i(-9999, -9999)
-var noise        : FastNoiseLite
+
+# 노이즈 레이어 (옥타브 합성으로 자연스러운 지형)
+var noise_base   : FastNoiseLite  # 큰 산/평원 형태
+var noise_detail : FastNoiseLite  # 중간 굴곡
+var noise_rough  : FastNoiseLite  # 미세한 돌기
 
 # 씬 레퍼런스
 var tree_scene    : PackedScene
@@ -21,9 +24,31 @@ var chicken_scene : PackedScene
 var horse_scene   : PackedScene
 
 func _ready() -> void:
-	noise           = FastNoiseLite.new()
-	noise.seed      = randi()
-	noise.frequency = 0.04
+	var base_seed := randi()
+
+	# 큰 지형 (산맥·평원)
+	noise_base            = FastNoiseLite.new()
+	noise_base.seed       = base_seed
+	noise_base.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+	noise_base.frequency  = 0.018
+	noise_base.fractal_type    = FastNoiseLite.FRACTAL_FBM
+	noise_base.fractal_octaves = 4
+	noise_base.fractal_lacunarity = 2.0
+	noise_base.fractal_gain     = 0.5
+
+	# 중간 굴곡 (언덕·골짜기)
+	noise_detail            = FastNoiseLite.new()
+	noise_detail.seed       = base_seed + 1
+	noise_detail.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+	noise_detail.frequency  = 0.06
+	noise_detail.fractal_type    = FastNoiseLite.FRACTAL_FBM
+	noise_detail.fractal_octaves = 3
+
+	# 미세 표면 (돌기·거친 느낌)
+	noise_rough            = FastNoiseLite.new()
+	noise_rough.seed       = base_seed + 2
+	noise_rough.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+	noise_rough.frequency  = 0.18
 
 	tree_scene    = preload("res://scenes/resources/tree.tscn")
 	stone_scene   = preload("res://scenes/resources/stone.tscn")
@@ -34,9 +59,9 @@ func _ready() -> void:
 	chicken_scene = preload("res://scenes/animals/chicken.tscn")
 	horse_scene   = preload("res://scenes/animals/horse.tscn")
 
-	# 시작 시 플레이어 주변 청크 미리 생성
-	for cx in range(-3, 4):
-		for cz in range(-3, 4):
+	# 시작 시 플레이어 주변 청크만 미리 생성 (3x3)
+	for cx in range(-1, 2):
+		for cz in range(-1, 2):
 			generate_chunk(Vector2i(cx, cz))
 	player_chunk = Vector2i(0, 0)
 
@@ -53,9 +78,16 @@ func _process(_delta: float) -> void:
 		player_chunk = new_chunk
 		_update_chunks()
 
-## 지형 높이값 반환 (월드 좌표)
+## 지형 높이값 반환 (월드 좌표) - 3개 노이즈 합성
 func get_height(wx: float, wz: float) -> float:
-	return noise.get_noise_2d(wx, wz) * HEIGHT_AMP
+	var h: float = 0.0
+	h += noise_base.get_noise_2d(wx, wz)   * 14.0   # 큰 산/평원
+	h += noise_detail.get_noise_2d(wx, wz) *  4.0   # 중간 언덕
+	h += noise_rough.get_noise_2d(wx, wz)  *  0.8   # 표면 거칠기
+	# 낮은 지역은 더 평평하게 (절벽보다 완만한 계곡 느낌)
+	if h < 0.0:
+		h *= 0.5
+	return h
 
 func _update_chunks() -> void:
 	var desired: Array[Vector2i] = []
@@ -86,7 +118,7 @@ func generate_chunk(chunk_pos: Vector2i) -> void:
 	chunks[chunk_pos] = chunk_node
 
 	# --- 지형 메시 생성 ---
-	var subdivs := 16
+	var subdivs := 24  # 세분도 높일수록 지형 굴곡이 부드럽고 자세해짐
 	var st := SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
 
