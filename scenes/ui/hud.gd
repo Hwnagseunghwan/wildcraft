@@ -81,6 +81,8 @@ func _build_slot(parent: HBoxContainer) -> Dictionary:
 	var vp := SubViewport.new()
 	vp.size                      = Vector2i(96, 96)
 	vp.transparent_bg            = false
+	vp.own_world_3d              = true   # 각 슬롯이 독립된 3D 월드 사용
+	vp.world_3d                  = World3D.new()
 	vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 
 	# 배경 환경 (GL Compatibility에서 transparent_bg 비신뢰 → 어두운 배경 사용)
