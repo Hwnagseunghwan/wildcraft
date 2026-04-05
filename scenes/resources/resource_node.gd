@@ -34,6 +34,7 @@ func _flash() -> void:
 func _spawn_drop() -> void:
 	var drop := dropped_item_scene.instantiate()
 	drop.item_type = resource_type
-	# 블록이 파괴된 위치 살짝 위 허공에 생성
-	drop.global_position = global_position + Vector3(0.0, 0.05, 0.0)
+	var spawn_pos  := global_position + Vector3(0.0, 0.5, 0.0)
 	get_parent().add_child(drop)
+	# add_child 이후 global_position 설정해야 정상 작동
+	drop.global_position = spawn_pos
