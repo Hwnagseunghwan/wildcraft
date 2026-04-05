@@ -79,39 +79,42 @@ func _build_slot(parent: HBoxContainer) -> Dictionary:
 	vp_container.stretch = true
 
 	var vp := SubViewport.new()
-	vp.size                      = Vector2i(80, 80)
-	vp.transparent_bg            = true
+	vp.size                      = Vector2i(96, 96)
+	vp.transparent_bg            = false
 	vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 
-	# 환경 (앰비언트 라이트)
+	# 배경 환경 (GL Compatibility에서 transparent_bg 비신뢰 → 어두운 배경 사용)
 	var env_node := WorldEnvironment.new()
 	var env      := Environment.new()
+	env.background_mode  = Environment.BG_COLOR
+	env.background_color = Color(0.08, 0.08, 0.10, 1.0)
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	env.ambient_light_color  = Color(1.0, 1.0, 1.0)
-	env.ambient_light_energy = 1.0
-	env_node.environment     = env
+	env.ambient_light_energy = 1.2
+	env_node.environment = env
 	vp.add_child(env_node)
 
 	# 조명
 	var light := DirectionalLight3D.new()
-	light.rotation_degrees = Vector3(-50, 30, 0)
-	light.light_energy     = 1.4
+	light.rotation_degrees = Vector3(-45, 30, 0)
+	light.light_energy     = 1.5
 	vp.add_child(light)
 
-	# 카메라 (직교 투영으로 왜곡 없음)
+	# 카메라 — 정면에서 약간 위쪽에서 내려다보는 구도
 	var cam := Camera3D.new()
-	cam.projection      = Camera3D.PROJECTION_ORTHOGONAL
-	cam.size            = 0.30
-	cam.position        = Vector3(0.10, 0.10, 0.22)
-	cam.rotation_degrees = Vector3(-22, -25, 0)
+	cam.projection       = Camera3D.PROJECTION_ORTHOGONAL
+	cam.size             = 0.26
+	cam.near             = 0.01
+	cam.far              = 10.0
+	cam.position         = Vector3(0.0, 0.06, 0.5)
+	cam.rotation_degrees = Vector3(-7.0, 0.0, 0.0)
 	vp.add_child(cam)
 
-	# 아이템 메시 (처음엔 숨김, 메시 없이 생성)
+	# 아이템 메시 (처음엔 숨김)
 	var mesh_inst := MeshInstance3D.new()
 	mesh_inst.visible          = false
-	mesh_inst.rotation_degrees = Vector3(15, -30, 8)
+	mesh_inst.rotation_degrees = Vector3(20, 40, 8)
 	var mat := StandardMaterial3D.new()
-	# 메시가 없는 상태에서 material을 설정하면 오류 → update 시 적용
 	vp.add_child(mesh_inst)
 
 	vp_container.add_child(vp)
