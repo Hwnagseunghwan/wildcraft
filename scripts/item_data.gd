@@ -59,3 +59,49 @@ func get_item_name(item_type: int) -> String:
 
 func get_item_color(item_type: int) -> Color:
 	return ITEM_COLORS.get(item_type, Color.WHITE)
+
+## 아이템 타입별 3D 메시 생성
+func create_mesh(item_type: int) -> Mesh:
+	match item_type:
+		ItemType.WOOD:
+			var m := CylinderMesh.new()
+			m.top_radius      = 0.052
+			m.bottom_radius   = 0.062
+			m.height          = 0.16
+			m.radial_segments = 10
+			return m
+		ItemType.STONE:
+			var m := SphereMesh.new()
+			m.radius          = 0.072
+			m.height          = 0.10
+			m.radial_segments = 8
+			m.rings           = 4
+			return m
+		ItemType.COAL:
+			var m := BoxMesh.new()
+			m.size = Vector3(0.10, 0.08, 0.10)
+			return m
+		ItemType.IRON_ORE, ItemType.GOLD_ORE, ItemType.DIAMOND:
+			var m := BoxMesh.new()
+			m.size = Vector3(0.11, 0.11, 0.11)
+			return m
+		ItemType.WOOL:
+			var m := SphereMesh.new()
+			m.radius = 0.08
+			m.height = 0.11
+			return m
+		ItemType.FEATHER:
+			var m := CylinderMesh.new()
+			m.top_radius    = 0.005
+			m.bottom_radius = 0.018
+			m.height        = 0.18
+			m.radial_segments = 6
+			return m
+		ItemType.LEATHER:
+			var m := BoxMesh.new()
+			m.size = Vector3(0.14, 0.02, 0.10)
+			return m
+		_:
+			var m := BoxMesh.new()
+			m.size = Vector3(0.10, 0.08, 0.10)
+			return m
