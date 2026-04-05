@@ -178,14 +178,14 @@ func _spawn_objects(chunk_pos: Vector2i, chunk_node: Node3D) -> void:
 	# 동물 (40% 확률)
 	if rng.randf() < 0.4:
 		var animal_scenes := [sheep_scene, cow_scene, pig_scene, chicken_scene, horse_scene]
-		var animal := animal_scenes[rng.randi_range(0, animal_scenes.size() - 1)].instantiate()
+		var animal: Node3D = animal_scenes[rng.randi_range(0, animal_scenes.size() - 1)].instantiate() as Node3D
 
 		var lx := rng.randf_range(2.0, CHUNK_SIZE - 2.0)
 		var lz := rng.randf_range(2.0, CHUNK_SIZE - 2.0)
 		var wx := chunk_pos.x * CHUNK_SIZE + lx
 		var wz := chunk_pos.y * CHUNK_SIZE + lz
-		animal.global_position = Vector3(wx, get_height(wx, wz) + 1.0, wz)
 		chunk_node.add_child(animal)
+		animal.global_position = Vector3(wx, get_height(wx, wz) + 1.0, wz)
 
 func _spawn_resource(
 		scene: PackedScene,
@@ -203,8 +203,8 @@ func _spawn_resource(
 	var node := scene.instantiate()
 	if node.has_method("set") and "resource_type" in node:
 		node.resource_type = res_type
-	node.global_position = Vector3(wx, h, wz)
 	chunk_node.add_child(node)
+	node.global_position = Vector3(wx, h, wz)
 
 func _weighted_pick(rng: RandomNumberGenerator, items: Array, weights: Array) -> int:
 	var total := 0.0

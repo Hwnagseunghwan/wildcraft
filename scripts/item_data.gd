@@ -54,8 +54,8 @@ const ITEM_COLORS: Dictionary = {
 	ItemType.CHICKEN_MEAT: Color(0.95, 0.75, 0.55),
 }
 
-func get_name(item_type: int) -> String:
+func get_item_name(item_type: int) -> String:
 	return ITEM_NAMES.get(item_type, "알 수 없음")
 
-func get_color(item_type: int) -> Color:
+func get_item_color(item_type: int) -> Color:
 	return ITEM_COLORS.get(item_type, Color.WHITE)

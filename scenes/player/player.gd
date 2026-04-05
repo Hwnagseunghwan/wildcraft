@@ -78,7 +78,7 @@ func _perform_hit() -> void:
 	if result.is_empty():
 		return
 
-	var collider := result["collider"]
+	var collider: Node3D = result["collider"] as Node3D
 
 	# 직접 hit 가능 노드인지 확인
 	if collider.has_method("take_hit"):

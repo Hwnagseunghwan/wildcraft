@@ -12,12 +12,12 @@ var _bob_time: float = 0.0
 func _ready() -> void:
 	# 아이템 색상 적용
 	var mat := StandardMaterial3D.new()
-	mat.albedo_color = ItemData.get_color(item_type)
+	mat.albedo_color = ItemData.get_item_color(item_type)
 	mat.metallic     = 0.2
 	mat.roughness    = 0.6
 	mesh_inst.set_surface_override_material(0, mat)
 
-	lbl.text     = ItemData.get_name(item_type)
+	lbl.text     = ItemData.get_item_name(item_type)
 	lbl.position = Vector3(0, 0.18, 0)
 
 	body_entered.connect(_on_body_entered)

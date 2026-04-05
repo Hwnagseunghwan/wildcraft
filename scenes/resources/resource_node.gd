@@ -23,10 +23,10 @@ func take_hit() -> void:
 func _flash() -> void:
 	for child in get_children():
 		if child is MeshInstance3D:
-			var mat := child.get_active_material(0)
+			var mat: StandardMaterial3D = child.get_active_material(0) as StandardMaterial3D
 			if mat == null:
 				continue
-			var orig := mat.albedo_color
+			var orig: Color = mat.albedo_color
 			var tween := create_tween()
 			tween.tween_property(mat, "albedo_color", Color.WHITE, 0.05)
 			tween.tween_property(mat, "albedo_color", orig,        0.08)

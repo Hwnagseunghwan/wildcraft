@@ -40,10 +40,14 @@ func _build_ui() -> void:
 	# ── 인벤토리 바 (화면 하단 중앙) ──
 	var hbox := HBoxContainer.new()
 	hbox.name = "InventoryBar"
-	hbox.set_anchors_preset(Control.PRESET_BOTTOM_CENTER)
-	hbox.offset_left   = -(SLOT_SIZE.x * SLOT_COUNT + 6 * (SLOT_COUNT - 1)) / 2.0
+	hbox.anchor_left   = 0.5
+	hbox.anchor_right  = 0.5
+	hbox.anchor_top    = 1.0
+	hbox.anchor_bottom = 1.0
+	var bar_w: float = SLOT_SIZE.x * SLOT_COUNT + 6 * (SLOT_COUNT - 1)
+	hbox.offset_left   = -bar_w / 2.0
 	hbox.offset_top    = -SLOT_SIZE.y - 16
-	hbox.offset_right  =  (SLOT_SIZE.x * SLOT_COUNT + 6 * (SLOT_COUNT - 1)) / 2.0
+	hbox.offset_right  =  bar_w / 2.0
 	hbox.offset_bottom = -16
 	hbox.add_theme_constant_override("separation", 6)
 	add_child(hbox)
@@ -95,17 +99,17 @@ func _build_ui() -> void:
 # ─── 업데이트 ─────────────────────────────────────────────────
 func _update_inventory() -> void:
 	for i in SLOT_COUNT:
-		var slot := InventoryManager.slots[i]
-		var ui   := slot_ui_list[i]
+		var slot: Dictionary = InventoryManager.slots[i]
+		var ui: Dictionary   = slot_ui_list[i]
 
 		if slot["item"] != ItemData.ItemType.NONE and slot["count"] > 0:
-			ui["color_rect"].color       = ItemData.get_color(slot["item"])
-			ui["count_label"].text       = str(slot["count"])
-			ui["name_label"].text        = ItemData.get_name(slot["item"])
+			(ui["color_rect"] as ColorRect).color = ItemData.get_item_color(slot["item"])
+			(ui["count_label"] as Label).text      = str(slot["count"])
+			(ui["name_label"] as Label).text       = ItemData.get_item_name(slot["item"])
 		else:
-			ui["color_rect"].color       = Color.TRANSPARENT
-			ui["count_label"].text       = ""
-			ui["name_label"].text        = ""
+			(ui["color_rect"] as ColorRect).color = Color.TRANSPARENT
+			(ui["count_label"] as Label).text      = ""
+			(ui["name_label"] as Label).text       = ""
 
 func _update_time(normalized_time: float) -> void:
 	# 0.0 = 자정, 0.5 = 정오 기준으로 시각 표시
