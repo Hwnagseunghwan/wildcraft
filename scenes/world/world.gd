@@ -173,10 +173,11 @@ func generate_chunk(chunk_pos: Vector2i) -> void:
 	mesh_inst.mesh = arr_mesh
 	chunk_node.add_child(mesh_inst)
 
-	# 충돌
-	var static_body  := StaticBody3D.new()
-	var col_shape    := CollisionShape3D.new()
-	col_shape.shape  = arr_mesh.create_trimesh_shape()
+	# 충돌 + 채굴 스크립트 (땅을 때리면 돌 드롭)
+	var static_body        := StaticBody3D.new()
+	static_body.set_script(preload("res://scenes/resources/terrain_body.gd"))
+	var col_shape          := CollisionShape3D.new()
+	col_shape.shape        = arr_mesh.create_trimesh_shape()
 	static_body.add_child(col_shape)
 	mesh_inst.add_child(static_body)
 
@@ -191,9 +192,7 @@ func _spawn_objects(chunk_pos: Vector2i, chunk_node: Node3D) -> void:
 	for _i in rng.randi_range(3, 8):
 		_spawn_resource(tree_scene, chunk_pos, chunk_node, rng, ItemData.ItemType.WOOD)
 
-	# 돌 (2~5개)
-	for _i in rng.randi_range(2, 5):
-		_spawn_resource(stone_scene, chunk_pos, chunk_node, rng, ItemData.ItemType.STONE)
+	# 돌은 지형에서 채굴 → 지표면 스폰 없음
 
 	# 광물 (30% 확률)
 	if rng.randf() < 0.3:
